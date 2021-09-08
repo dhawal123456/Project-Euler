@@ -1,0 +1,49 @@
+def SieveOfEratosthenes(n): 
+    result = set()
+
+    prime = [True for i in range(n+1)] 
+    p = 2
+    #search up to sqrt(n)
+    while (p * p <= n): 
+           
+        if (prime[p] == True): 
+               
+            #if prime found, make multiples->false
+            for i in range(p * 2, n+1, p): 
+                prime[i] = False
+        p += 1
+      
+    #once done store primes in Set
+    for p in range(2, n): 
+        if prime[p]: 
+            result.add(p)
+
+    return result 
+
+#primes and squares for worst case
+primes = SieveOfEratosthenes(500000) #set for O(1) access
+squares = [2*x*x for x in range(500)]
+
+t = int(input())
+
+for i in range(t):
+
+    #take number
+    num = int(input())
+
+    #ways it can be written as
+    ways = 0
+    for a in squares:
+        #dont search too high on squares
+        #cause this costs. its a 500 elem' list
+        if a > num:
+            break
+
+        #solve equation num = prime + 2*square
+        #==> prime = num-2*square
+        #so if there is a prime we increase counter
+        if (num - a) in primes:
+            ways += 1
+    
+    #print total ways
+    print(ways)
