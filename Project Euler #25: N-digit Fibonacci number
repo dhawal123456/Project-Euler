@@ -1,0 +1,13 @@
+fibonacii = [0, 1, 1]
+cache = {1:1}
+size = 10
+j = 2
+for i in range(3, 23923):
+    fibonacii.append(fibonacii[i-1]+fibonacii[i-2])
+    if fibonacii[i] >= size:
+        cache[j] = i
+        size *= 10
+        j += 1
+
+for T in range(int(input())):
+    print(cache[int(input())])
