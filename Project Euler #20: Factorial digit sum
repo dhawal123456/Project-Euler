@@ -1,0 +1,10 @@
+array=[1,1]
+last=1
+for i in range(2,1000+1):
+    last=last*i
+    ans=0
+    for j in str(last):
+        ans=ans+int(j)
+    array.append(ans)
+for _ in range(int(input())):
+    print(array[int(input())])
