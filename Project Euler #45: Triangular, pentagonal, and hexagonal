@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define all(v) (v).begin(), (v).end()
+#define debug(x) cout << #x << " = " << x << endl
+typedef long long ll;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+inline ll Mod(ll x, ll mod) { return x % mod >= 0 ? x % mod : x % mod + mod; }
+
+ll *tri = new ll[20000001];
+ll *penta = new ll[20000001];
+ll *hexa = new ll[20000001];
+const ll N = 20000000;
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    tri[0] = penta[0] = hexa[0] = 0;
+    for (ll i = 1; i <= N; i++)
+    {
+        tri[i] = i * (i + 1) / 2;
+        penta[i] = i * (3 * i - 1) / 2;
+        hexa[i] = i * (2 * i - 1);
+    }
+    vector<ll> ans;
+    ans.reserve(1000);
+    ll n, a, b;
+    cin >> n >> a >> b;
+    if (a == 3)
+    {
+        ll i = 1;
+        while (tri[i] < n)
+        {
+            if (binary_search(penta, penta + N + 1, tri[i]))
+                ans.emplace_back(tri[i]);
+            i++;
+        }
+    }
+
+    else if (a == 5)
+    {
+        ll i = 1;
+        while (hexa[i] < n)
+        {
+            if (binary_search(penta, penta + N + 1, hexa[i]))
+                ans.emplace_back(hexa[i]);
+            i++;
+        }
+    }
+    sort(all(ans));
+    for (ll i : ans)
+        cout << i << '\n';
+
+    delete[] penta, hexa, tri;
+}
