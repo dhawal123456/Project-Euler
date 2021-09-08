@@ -1,0 +1,10 @@
+import sys
+
+t=int(input().strip())
+for _ in range(t):
+    N=int(input().strip())
+    if N==1:
+        print(1)
+    else:
+        n=N//2
+        print((1+4*(n*6+9*n*(n-1)//2+2*(n-1)*n*(2*n-1)//3))%1000000007)
