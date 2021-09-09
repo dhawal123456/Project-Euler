@@ -1,0 +1,100 @@
+#include <vector>
+#include <iostream>
+
+int main()
+{
+  // read encrypted message from STDIN
+  std::vector<unsigned char> encrypted;
+
+//#define ORIGINAL
+#ifdef ORIGINAL
+  // read numbers in CSV format, e.g. 74,2,999,1,...
+  while (true)
+  {
+    unsigned int current;
+    std::cin >> current;
+
+    // no more data
+    if (!std::cin)
+      break;
+
+    encrypted.push_back(current);
+
+    // skip comma
+    std::cin.get();
+  }
+
+#else
+
+  // text length
+  unsigned int size;
+  std::cin >> size;
+  encrypted.clear();
+  // read text from STDIN
+  while (size--)
+  {
+    unsigned int current;
+    std::cin >> current;
+    encrypted.push_back(current);
+  }
+#endif
+
+  // try all possible keys
+  for (unsigned char i = 'a'; i <= 'z'; i++)
+    for (unsigned char j = 'a'; j <= 'z'; j++)
+      for (unsigned char k = 'a'; k <= 'z'; k++)
+      {
+        // current key
+        const unsigned char key[] = { i, j, k };
+
+        // apply XOR to all bytes
+        std::vector<unsigned char> decoded;
+        for (size_t pos = 0; pos < encrypted.size(); pos++)
+          decoded.push_back(encrypted[pos] ^ key[pos % 3]);
+
+        // classify result
+        bool valid = true;
+        for (auto d : decoded)
+        {
+          // only allow:
+          // 0-9 a-z A-Z ;:,.'?-!() and space
+          valid  = (d >= '0' && d <= '9');
+          valid |= (d >= 'a' && d <= 'z');
+          valid |= (d >= 'A' && d <= 'Z');
+          valid |= (d == ' ' || d == ',' || d == '.' || d == '?' || d == '!');
+          valid |= (d == ';' || d == '-' || d == '\'');
+          valid |= (d == '(' || d == ')');
+
+          // reject any invalid character
+          if (!valid)
+            break;
+        }
+
+        // try next key
+        if (!valid)
+          continue;
+
+        // bonus feature: show decoded text
+//#define SHOW_DECODED
+#ifdef  SHOW_DECODED
+        for (auto d : decoded)
+          std::cout << d;
+        std::cout << std::endl;
+#endif
+
+#ifdef ORIGINAL
+        // we found the key, now add all ASCII codes of the decrypted text
+        // add ASCII codes
+        unsigned int asciiSum = 0;
+        for (auto d : decoded)
+          asciiSum += d;
+        std::cout << asciiSum << std::endl;
+        return 0;
+#else
+        // print key
+        std::cout << i << j << k << std::endl;
+#endif
+      }
+
+  return 0;
+}
